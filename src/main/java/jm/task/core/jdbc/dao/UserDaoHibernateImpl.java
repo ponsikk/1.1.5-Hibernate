@@ -1,18 +1,19 @@
 package jm.task.core.jdbc.dao;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 
-import javax.transaction.Transaction;
+
+import java.util.ArrayList;
 import java.util.List;
-
+//почему везде явный кастинг к (Transaction)? Idea обманула с подсказками, нужно было просто импорт сделать
 public class UserDaoHibernateImpl implements UserDao {
-    public UserDaoHibernateImpl() {
 
-    }
-
+    public UserDaoHibernateImpl() {}
 
     @Override
     public void createUsersTable() {
@@ -23,11 +24,14 @@ public class UserDaoHibernateImpl implements UserDao {
                 "age TINYINT) ENGINE=MyISAM";
 
         try (Session session = Util.getSessionFactory().openSession()) {
-            Transaction transaction = (Transaction) session.beginTransaction();
-            session.createNativeQuery(sql).executeUpdate(); // Используем createNativeQuery вместо createSQLQuery
-            transaction.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
+            Transaction transaction = session.beginTransaction();
+            try {
+                session.createNativeQuery(sql).executeUpdate();
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction != null) transaction.rollback(); // Роллбэк
+                e.printStackTrace();
+            }
         }
     }
 
@@ -36,60 +40,71 @@ public class UserDaoHibernateImpl implements UserDao {
         String sql = "DROP TABLE IF EXISTS users";
 
         try (Session session = Util.getSessionFactory().openSession()) {
-            Transaction transaction = (Transaction) session.beginTransaction();
-            session.createSQLQuery(sql).executeUpdate();
-            transaction.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
+            Transaction transaction = session.beginTransaction();
+            try {
+                session.createNativeQuery(sql).executeUpdate();
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction != null) transaction.rollback(); // Роллбэк
+                e.printStackTrace();
+            }
         }
     }
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
         try (Session session = Util.getSessionFactory().openSession()) {
-            Transaction transaction = (Transaction) session.beginTransaction();
-            User user = new User(name, lastName, age);
-            session.save(user);
-            transaction.commit();
-            System.out.println("User с именем — " + name + " добавлен в базу данных");
-        } catch (Exception e) {
-            e.printStackTrace();
+            Transaction transaction = session.beginTransaction();
+            try {
+                User user = new User(name, lastName, age);
+                session.save(user);
+                transaction.commit();
+                System.out.println("Пользователь с именем — " + name + " добавлен в базу данных");
+            } catch (Exception e) {
+                if (transaction != null) transaction.rollback(); // Роллбэк
+                e.printStackTrace();
+            }
         }
     }
+
     @Override
     public void removeUserById(long id) {
+        String hql = "DELETE FROM User WHERE id = :userId"; // Строго один запрос
         try (Session session = Util.getSessionFactory().openSession()) {
-            Transaction transaction = (Transaction) session.beginTransaction();
-            User user = session.get(User.class, id);
-            if (user != null) {
-                session.delete(user);
+            Transaction transaction = session.beginTransaction();
+            try {
+                session.createQuery(hql).setParameter("userId", id).executeUpdate();
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction != null) transaction.rollback(); // Роллбэк
+                e.printStackTrace();
             }
-            transaction.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
     @Override
     public List<User> getAllUsers() {
-        List<User> users = null;
+        List<User> users = new ArrayList<>();
         try (Session session = Util.getSessionFactory().openSession()) {
             users = session.createQuery("from User", User.class).list();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return users;
-    }
-
+    } // Роллбэк не нужен ?
 
     @Override
     public void cleanUsersTable() {
         try (Session session = Util.getSessionFactory().openSession()) {
-            Transaction transaction = (Transaction) session.beginTransaction();
-            session.createQuery("delete from User").executeUpdate();
-            transaction.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
+            Transaction transaction = session.beginTransaction();
+            try {
+                session.createQuery("delete from User").executeUpdate();
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction != null) transaction.rollback(); // Роллбэк
+                e.printStackTrace();
+            }
         }
     }
 }
+
