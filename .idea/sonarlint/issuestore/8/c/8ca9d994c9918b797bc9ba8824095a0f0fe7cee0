@@ -1,6 +1,6 @@
 
-Ä
-java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Ñ½†š8¸°Êè¯2J$ffe732a9-20e1-4a21-bdee-d27c43637776
-r	java:S1062"+Replace this use of System.out by a logger.(Î”Ì§ÿÿÿÿÿ8À°Êè¯2J$5bee8905-0285-4ba6-b0e4-06695bab7658
-g
-java:S6905G"Don't use the query "SELECT *".(ƒÊğÖûÿÿÿÿ8Í°Êè¯2J$e01631f8-b562-4b42-b9b6-b21b5c28e299
+
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Ñ½†š8²ÉÏø²2
+L	java:S1062"+Replace this use of System.out by a logger.(Î”Ì§ÿÿÿÿÿ8¶ÉÏø²2
+A
+java:S6905G"Don't use the query "SELECT *".(ƒÊğÖûÿÿÿÿ8¹ÉÏø²2

@@ -1,6 +1,7 @@
 
 É
-java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(±¦úÁøÿÿÿÿ8²ªÁ÷²2J$7ae39122-3cd5-48a2-9834-ddc6667fc04c
-m	java:S106>"+Replace this use of System.out by a logger.(×íÃ8·ªÁ÷²2J$1eb05699-2b50-434c-96c4-fae9c222269b
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(âÚ­¬şÿÿÿÿ8âÜœÿ²2J$d8a62800-f816-4c1d-9274-ca65489d922e
+m	java:S106?"+Replace this use of System.out by a logger.(×íÃ8çÜœÿ²2J$64a03a26-6c51-43c7-b658-7284e5bf4a7b
+m	java:S106t"+Replace this use of System.err by a logger.(±«Øş8ìÜœÿ²2J$aafca89b-4f01-46b7-a6d1-77992b9971b9
 
-java:S1128"9Remove this unused import 'org.hibernate.SessionFactory'.(ñ¦«¬şÿÿÿÿ8»ªÁ÷²2J$c9c68af8-f19f-4339-9f0a-602340dca858
+java:S1128"9Remove this unused import 'org.hibernate.SessionFactory'.(ñ¦«¬şÿÿÿÿ8ãİ¥ÿ²2J$2097da56-e9a5-41ad-bd49-9f8d64219279

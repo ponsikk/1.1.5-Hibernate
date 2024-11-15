@@ -13,7 +13,8 @@ import java.util.List;
 //почему везде явный кастинг к (Transaction)? Idea обманула с подсказками, нужно было просто импорт сделать
 public class UserDaoHibernateImpl implements UserDao {
 
-    public UserDaoHibernateImpl() {}
+    public UserDaoHibernateImpl() {
+    }
 
     @Override
     public void createUsersTable() {
@@ -29,7 +30,7 @@ public class UserDaoHibernateImpl implements UserDao {
                 session.createNativeQuery(sql).executeUpdate();
                 transaction.commit();
             } catch (Exception e) {
-                if (transaction != null) transaction.rollback(); // Роллбэк
+                handleRollback(transaction);  // Роллбэк
                 e.printStackTrace();
             }
         }
@@ -45,7 +46,7 @@ public class UserDaoHibernateImpl implements UserDao {
                 session.createNativeQuery(sql).executeUpdate();
                 transaction.commit();
             } catch (Exception e) {
-                if (transaction != null) transaction.rollback(); // Роллбэк
+                handleRollback(transaction);  // Роллбэк
                 e.printStackTrace();
             }
         }
@@ -61,7 +62,7 @@ public class UserDaoHibernateImpl implements UserDao {
                 transaction.commit();
                 System.out.println("Пользователь с именем — " + name + " добавлен в базу данных");
             } catch (Exception e) {
-                if (transaction != null) transaction.rollback(); // Роллбэк
+                handleRollback(transaction);  // Роллбэк
                 e.printStackTrace();
             }
         }
@@ -76,7 +77,7 @@ public class UserDaoHibernateImpl implements UserDao {
                 session.createQuery(hql).setParameter("userId", id).executeUpdate();
                 transaction.commit();
             } catch (Exception e) {
-                if (transaction != null) transaction.rollback(); // Роллбэк
+                handleRollback(transaction); // Роллбэк
                 e.printStackTrace();
             }
         }
@@ -101,8 +102,19 @@ public class UserDaoHibernateImpl implements UserDao {
                 session.createQuery("delete from User").executeUpdate();
                 transaction.commit();
             } catch (Exception e) {
-                if (transaction != null) transaction.rollback(); // Роллбэк
+                handleRollback(transaction); // Роллбэк
                 e.printStackTrace();
+            }
+        }
+    }
+
+    private void handleRollback(Transaction transaction) {
+        if (transaction != null) {
+            try {
+                transaction.rollback();
+            } catch (RuntimeException rollbackException) {
+                System.err.println("Ошибка при выполнении отката транзакции:");
+                rollbackException.printStackTrace();
             }
         }
     }
